@@ -30,7 +30,7 @@ vector<int> twoSum(vector<int> &nums, int target)
     }
     
    
-    return {};
+    return {-1,-1};
 }
 
 int main()
@@ -39,9 +39,11 @@ int main()
     vector<int> v;
     v = {1,2,3,4,5};
     vector<int> result = twoSum(v, 5);
+    cout<<"{";
     for (int i = 0; i < result.size(); i++)
     {
-        cout << result[i] << " ";
+        cout << result[i] << ",";
     }
+    cout<<"}";
     return 0;
 }
