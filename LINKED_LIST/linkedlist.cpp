@@ -27,7 +27,13 @@ Node *convertArray2LL(vector<int> &arr)
     }
     return head;
 }
-
+Node *deleteHead(Node *head)
+{
+    Node *temp = head;
+    head = head->next;
+    free(temp);
+    return head;
+}
 int main()
 {
     // Node *node1 = new Node(10);
@@ -36,10 +42,12 @@ int main()
     vector<int> arr = {2, 3, 4, 5, 32, 45};
     Node *head = convertArray2LL(arr);
     Node *temp = head;
-    while (temp)
-    {
-        cout << temp->data << "->";
-        temp = temp->next;
-    }
+    // while (temp)
+    // {
+    //     cout << temp->data << "->";
+    //     temp = temp->next;
+    // }
+    Node *newHead = deleteHead(head);
+    cout << newHead->data;
     return 0;
 }
