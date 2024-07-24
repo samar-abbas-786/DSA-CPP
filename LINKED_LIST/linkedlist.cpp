@@ -34,6 +34,27 @@ Node *deleteHead(Node *head)
     free(temp);
     return head;
 }
+Node *print(Node *head)
+{
+    Node *temp = head;
+    if (head->next == nullptr)
+        return head;
+    while (temp != nullptr)
+    {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+}
+Node *deleteTail(Node *head)
+{
+    Node *temp = head;
+    while (temp->next->next != nullptr)
+    {
+        temp = temp->next;
+    }
+    delete temp->next;
+    temp->next = nullptr;
+}
 int main()
 {
     // Node *node1 = new Node(10);
@@ -41,13 +62,18 @@ int main()
     // cout << node1->next << endl;
     vector<int> arr = {2, 3, 4, 5, 32, 45};
     Node *head = convertArray2LL(arr);
-    Node *temp = head;
+    print(head);
+    deleteTail(head);
+    cout << endl;
+    print(head);
+    // Node *temp = head;
     // while (temp)
     // {
     //     cout << temp->data << "->";
     //     temp = temp->next;
     // }
-    Node *newHead = deleteHead(head);
-    cout << newHead->data;
+
+    // Delete head
+
     return 0;
 }
