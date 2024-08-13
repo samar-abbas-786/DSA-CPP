@@ -1,24 +1,24 @@
 #include <iostream>
 #include <vector>
-#include <queue>
+#include <stack>
 
 using namespace std;
 
 // BFS function to traverse the graph
 vector<int> BFS(int start, int n, vector<vector<int>> &adj)
 {
-    queue<int> q;
+    stack<int> st;
     vector<int> ans;
     vector<int> vis(n + 1, 0);  // `n + 1` to accommodate 1-based indexing
 
     // Start BFS from the specified node
     vis[start] = 1;
-    q.push(start);
+    st.push(start);
 
-    while (!q.empty())
+    while (!st.empty())
     {
-        int node = q.front();
-        q.pop();
+        int node = st.top();
+        st.pop();
         ans.push_back(node);
 
         for (auto it : adj[node])
@@ -26,7 +26,7 @@ vector<int> BFS(int start, int n, vector<vector<int>> &adj)
             if (!vis[it])
             {
                 vis[it] = 1;
-                q.push(it);
+                st.push(it);
             }
         }
     }
