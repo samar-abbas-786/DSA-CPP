@@ -13,10 +13,9 @@ public:
         // bool-0==>undircted
         // bool-1==>dircted
     }
-}
+};
 
-int
-main()
+int main()
 {
 
     return 0;
