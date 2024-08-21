@@ -74,7 +74,7 @@ public:
     }
 };
 
-int SpanningTree(int V, vector<vector<pair<int, int>>> &adj)
+int SpanningTree(int V, vector<vector<pair<int, int>>> &adj, vector<pair<int, int>> &mst)
 {
     MinHeap pq;
     vector<int> vis(V, 0);
@@ -103,11 +103,21 @@ int SpanningTree(int V, vector<vector<pair<int, int>>> &adj)
             if (!vis[adjNode])
             {
                 pq.push({adW, adjNode});
+                mst.push_back({node, adjNode});
             }
         }
     }
 
     return sum;
+}
+
+void printMST(const vector<pair<int, int>> &mst)
+{
+    cout << "Edges in the Minimum Spanning Tree:" << endl;
+    for (auto edge : mst)
+    {
+        cout << edge.first << " -- " << edge.second << endl;
+    }
 }
 
 void printAdjList(int V, const vector<vector<pair<int, int>>> &adj)
@@ -142,7 +152,9 @@ int main()
     }
 
     printAdjList(V, adj);
-    cout << "The Minimum Spanning Tree Sum is: " << SpanningTree(V, adj) << endl;
+    vector<pair<int, int>> mst;
 
+    cout << "The Minimum Spanning Tree Sum is: " << SpanningTree(V, adj, mst) << endl;
+    printMST(mst);
     return 0;
 }
