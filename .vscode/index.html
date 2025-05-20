@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequency Calculation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .diagram-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .block {
+            fill: #4CAF50;
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .arrow {
+            fill: none;
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .animated {
+            animation: move 2s infinite;
+        }
+        @keyframes move {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Frequency Calculation</h1>
+        <div class="form-group">
+            <label for="initialCarrierFreq">Initial Carrier Frequency (MHz):</label>
+            <input type="number" id="initialCarrierFreq" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="initialFreqDeviation">Initial Frequency of Deviation (MHz):</label>
+            <input type="number" id="initialFreqDeviation" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="desiredCarrierFreq">Required Carrier Frequency (MHz):</label>
+            <input type="number" id="desiredCarrierFreq" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="desiredFreqDeviation">Required Frequency of Deviation (MHz):</label>
+            <input type="number" id="desiredFreqDeviation" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="minOscillatorFreq">Range of Oscillator Frequency (MHz) - Minimum:</label>
+            <input type="number" id="minOscillatorFreq" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="maxOscillatorFreq">Range of Oscillator Frequency (MHz) - Maximum:</label>
+            <input type="number" id="maxOscillatorFreq" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="multiplier">Multiplier Factor (e.g., 2, 3, ...):</label>
+            <input type="number" id="multiplier" step="any" required>
+        </div>
+        <button class="btn" onclick="calculateFrequency()">Calculate</button>
+        <div id="results" class="result"></div>
+        <div class="diagram-container">
+            <h2>Block Diagram</h2>
+            <svg width="500" height="300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Blocks -->
+                <rect x="20" y="50" width="120" height="60" class="block" />
+                <text x="30" y="80" fill="#fff">Input</text>
+                <rect x="200" y="50" width="120" height="60" class="block animated" />
+                <text x="210" y="80" fill="#fff">Process</text>
+                <rect x="380" y="50" width="120" height="60" class="block" />
+                <text x="390" y="80" fill="#fff">Output</text>
+                
+                <!-- Arrows -->
+                <line x1="140" y1="80" x2="200" y2="80" class="arrow" marker-end="url(#arrowhead)" />
+                <line x1="320" y1="80" x2="380" y2="80" class="arrow" marker-end="url(#arrowhead)" />
+                
+                <!-- Arrowhead Marker -->
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" fill="#333">
+                        <polygon points="0 0, 10 3, 0 6" />
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        function calculateFrequency() {
+            let initialCarrierFreq = parseFloat(document.getElementById('initialCarrierFreq').value);
+            let initialFreqDeviation = parseFloat(document.getElementById('initialFreqDeviation').value);
+            let desiredCarrierFreq = parseFloat(document.getElementById('desiredCarrierFreq').value);
+            let desiredFreqDeviation = parseFloat(document.getElementById('desiredFreqDeviation').value);
+            let minOscillatorFreq = parseFloat(document.getElementById('minOscillatorFreq').value);
+            let maxOscillatorFreq = parseFloat(document.getElementById('maxOscillatorFreq').value);
+            let multiplier = parseInt(document.getElementById('multiplier').value, 10);
+
+            let oscillatorFrequency;
+            let x1 = 0, x2 = 0;
+
+            // Calculate the required oscillator frequency
+            for (let i = 1; ; i++) {
+                let Fl = (desiredCarrierFreq - (desiredFreqDeviation / initialFreqDeviation) * initialCarrierFreq) / Math.pow(multiplier, i);
+                if ((Fl >= minOscillatorFreq && Fl <= maxOscillatorFreq) || (-Fl >= minOscillatorFreq && -Fl <= maxOscillatorFreq)) {
+                    x1 = i;
+                    oscillatorFrequency = Fl;
+                    break;
+                }
+                if (i > 1000) {
+                    alert("Sorry, invalid data! Please enter correct data.");
+                    return;
+                }
+            }
+
+            // Calculate the second multiplier power
+            for (let i = 0; ; i++) {
+                let res = (desiredFreqDeviation / initialFreqDeviation);
+                if (Math.pow(multiplier, (x1 + i)) === res) {
+                    x2 = i;
+                    break;
+                }
+                if (i > 1000) {
+                    alert("Sorry, invalid data! Please enter correct data.");
+                    return;
+                }
+            }
+
+            // Display results
+            document.getElementById('results').innerHTML = `
+                <p>The required Multipliers: ${multiplier}^${x1} & ${multiplier}^${x2}</p>
+                <p>The required Frequency of Oscillator: ${oscillatorFrequency} MHz or ${(oscillatorFrequency * 1000)} KHz</p>
+            `;
+        }
+    </script>
+</body>
+</html>

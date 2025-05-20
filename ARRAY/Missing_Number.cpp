@@ -7,7 +7,7 @@ int findMissing(vector<int> &arr, int n)
     int s2 = 0;
     for (int i = 0; i < n; i++)
     {
-        s2 =s2+ arr[i];
+        s2 = s2 + arr[i];
     }
     return (sum - s2);
 }
